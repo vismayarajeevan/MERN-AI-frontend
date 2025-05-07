@@ -102,7 +102,7 @@ const AuthForm = () => {
 
         if (result.status === 200) {
           showToast(`${result.data.message}`, 'success');
-          navigate('/otp');
+          navigate('/otp', { state: { email: signupFields.email } });
 
           setSignupFields({
             userName: '',

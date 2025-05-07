@@ -1,16 +1,109 @@
 import React, { useState } from 'react';
 import OtpInput from 'react-otp-input';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { otpApi } from '../../services/allAPI';
+import { showToast } from '../../reusable/Toast';
+import { Spinner } from 'react-bootstrap';
+
+
 
 const Otp = () => {
-  const [otp, setOtp] = useState('');
 
-  const handleOtpChange = (otp) => {
-    setOtp(otp);
+    const navigate = useNavigate()
+
+  const location = useLocation(); // to access passed state
+  const emailFromState = location.state?.email || ''; // Access passed email
+  console.log("email",emailFromState);
+  
+  
+  // state to hold otp
+  const [otp, setOtp] = useState('');
+   
+  // state to hold error messages
+  const [error, setError] = useState("");
+
+  // state for spinner
+  const [isLoading,setIsLoading]=useState(false)
+
+  const handleOtpChange = (value) => {
+    // Validate that only numbers are entered
+    if (!/^\d*$/.test(value)) {
+      setError("OTP must contain only numbers.");
+      return;
+    }
+
+    // Set OTP value if valid
+    setOtp(value);
+
+    // Check length validation
+    if (value.length === 6) {
+      setError(""); // Clear error if OTP is valid
+    } else {
+      setError("OTP must be 6 digits.");
+    }
   };
 
-  const handleSubmitOtp = () => {
-    console.log('OTP Submitted:', otp);
-    // Add OTP verification logic here
+  const handleOtp = async (e) => {
+    e.preventDefault(); // Corrected function call
+    console.log("otp",otp)
+  
+    // Validate OTP before making API call
+    if (otp.length !== 6) {
+      setError("OTP must be 6 digits.");
+      return;
+    }
+
+      // Check if OTP contains only numbers and has 6 digits
+     else if (!/^\d{6}$/.test(otp)) {
+     setError("OTP must be 6 digits and contain only numbers.");
+     return;
+    }else{
+
+  setIsLoading(true)
+  const data = { email: emailFromState, otp }
+  console.log(data);
+  
+
+  try {
+    const result = await otpApi(data);
+    console.log("Entered OTP is", result);
+
+    if (result.status === 200) {
+
+      showToast(`${result.data.message}`, "success", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      
+      navigate('/')
+      
+      
+     
+    } else {
+      showToast(`${result.response.data.message}`, "error", {
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+    }
+  } catch (error) {
+    const errorMessage =
+             error.response?.data?.message ||
+             error.message ||
+             "Something went wrong!";
+   
+           showToast(errorMessage, "error", {
+             position: "top-right",
+             autoClose: 3000,
+           });
+  }
+  setIsLoading(false)
+
+}
+
+    
+    
+    
+    
   };
 
   return (
@@ -41,15 +134,31 @@ const Otp = () => {
             />
           )}
         />
+
+{error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
+
       </div>
 
       <div className="mt-6 text-center">
         <button
-          onClick={handleSubmitOtp}
+          onClick={handleOtp}
           className="w-full rounded bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
         >
-          Verify OTP
-        </button>
+           {isLoading ? (
+                  <>
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      size="sm"
+                      className="me-2"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                    Verifying...
+                  </>
+                ) :" Submit "
+                }       
+                 </button>
       </div>
     </div>
   );
