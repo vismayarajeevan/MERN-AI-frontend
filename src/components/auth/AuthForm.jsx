@@ -187,7 +187,7 @@ const AuthForm = () => {
                   setSignupFields({ ...signupFields, userName: e.target.value })
                 }
                 className={`block w-full rounded-lg border ${errors.name ? 'border-red-300' : 'border-gray-300'} py-2 pl-11 pr-3`}
-                placeholder="John Doe"
+                placeholder="username"
               />
             </div>
             {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
@@ -214,7 +214,7 @@ const AuthForm = () => {
                   : setLoginFields({ ...loginFields, email: e.target.value });
               }}
               className={`block w-full rounded-lg border ${errors.email ? 'border-red-300' : 'border-gray-300'} py-2 pl-11 pr-3`}
-              placeholder="johndoe@example.com"
+              placeholder="username@example.com"
             />
           </div>
           {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}

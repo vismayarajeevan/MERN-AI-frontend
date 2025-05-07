@@ -107,14 +107,17 @@ const Otp = () => {
   };
 
   return (
-    <div className="w-full max-w-md p-8 mx-auto mt-12">
+    
+
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl transition-all duration-300">
       <h2 className="text-center text-2xl font-bold text-gray-900">Enter OTP</h2>
       <p className="text-center text-sm text-gray-600 mt-2">
-        Please enter the OTP sent to your email.
+        Please enter the OTP sent to {emailFromState}.
       </p>
 
       <div className="mt-8 text-center">
-      <OtpInput
+        <OtpInput
           value={otp}
           onChange={handleOtpChange}
           numInputs={6}
@@ -123,20 +126,18 @@ const Otp = () => {
             <input
               {...props}
               style={{
-                width: "50px", // Increase the width here
-                height: "50px", // Optional: Adjust the height
-                fontSize: "1.2rem", // Optional: Adjust font size
-                textAlign: "center", // Center align text
-                margin: "0 5px", // Add space between inputs
-                border: "1px solid #ccc", // Optional: Add border styling
-                borderRadius: "4px", // Optional: Add rounded corners
+                width: '50px',
+                height: '50px',
+                fontSize: '1.2rem',
+                textAlign: 'center',
+                margin: '0 5px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
               }}
             />
           )}
         />
-
-{error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
-
+        {error && <p className="text-red-600 mt-2 text-sm">{error}</p>}
       </div>
 
       <div className="mt-6 text-center">
@@ -144,23 +145,20 @@ const Otp = () => {
           onClick={handleOtp}
           className="w-full rounded bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
         >
-           {isLoading ? (
-                  <>
-                    <Spinner
-                      animation="border"
-                      role="status"
-                      size="sm"
-                      className="me-2"
-                    >
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                    Verifying...
-                  </>
-                ) :" Submit "
-                }       
-                 </button>
+          {isLoading ? (
+            <>
+              <Spinner animation="border" role="status" size="sm" className="me-2">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+              Verifying...
+            </>
+          ) : (
+            'Submit'
+          )}
+        </button>
       </div>
     </div>
+  </div>
   );
 };
 
