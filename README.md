@@ -12,6 +12,15 @@ Currently, two official plugins are available:
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
 
-<!-- toastify  -->
+<!-- packages used -->
 
-* give toast
+1. Toastify :- give toast
+2. otp input :- design otp input
+3. tailwind css :- for styling
+4. axios :- for api call
+5. react router dom :- for routing
+6. react bootstrap :- for give spinner for submit buttons
+
+
+
+
