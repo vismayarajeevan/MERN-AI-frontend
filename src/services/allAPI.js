@@ -5,3 +5,7 @@ import commonAPI from "./commonAPI"
 export const registerApi =async(reqBody)=>{
     return await commonAPI('POST',`${base_URL}/auth/register`,reqBody)
 }
+
+export const otpApi =async(reqBody)=>{
+    return await commonAPI('POST',`${base_URL}/auth/verifyOtp`,reqBody)
+}
