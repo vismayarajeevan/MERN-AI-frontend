@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import { ToastContainer } from 'react-toastify'
 import Otp from './components/auth/Otp'
+import Dashboard from './pages/Dashboard'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     <Routes>
       <Route path='/' element={<Home/>} />
       <Route path='/otp' element={<Otp/>} />
+      <Route path='/dashboard' element={<Dashboard/>} />
 
     </Routes>
       

@@ -1,9 +1,7 @@
 
-
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
-import { registerApi } from '../../services/allAPI';
+import { loginApi, registerApi } from '../../services/allAPI';
 import { showToast } from '../../reusable/Toast';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
@@ -11,8 +9,8 @@ import { Spinner } from 'react-bootstrap';
 const AuthForm = () => {
   const [mode, setMode] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
-  const [isRegisterLoading, setIsRegisterLoading] = useState(false); // Separate loading state for registration
-  const [isLoginLoading, setIsLoginLoading] = useState(false); // Separate loading state for login
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false); 
+  const [isLoginLoading, setIsLoginLoading] = useState(false); 
   const navigate = useNavigate();
 
   const [loginFields, setLoginFields] = useState({
@@ -53,6 +51,7 @@ const AuthForm = () => {
     return emailRegex.test(email);
   };
 
+//   validation
   const handleValidation = () => {
     let valid = true;
     let newErrors = {};
@@ -90,6 +89,7 @@ const AuthForm = () => {
     return valid;
   };
 
+//   register
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -125,23 +125,48 @@ const AuthForm = () => {
     }
   };
 
+//   login
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (handleValidation()) {
       setIsLoginLoading(true); // Start loading for login
 
-      // Add login logic here, such as calling an API to login the user
-      console.log('Logging in with: ', loginFields);
+      try {
+        const result = await loginApi(loginFields)
+        console.log("login",result);
+        if(result.status == 200){
 
-      // Simulate a successful login (replace with actual API call)
-      setTimeout(() => {
-        setIsLoginLoading(false); // Stop loading for login
-        showToast('Login successful!', 'success');
-        navigate('/dashboard'); // Redirect to the dashboard (or another page)
-      }, 2000);
+
+            sessionStorage.setItem("token", result.data.token);
+            sessionStorage.setItem("userId", result.data.userId);
+
+            const userId = sessionStorage.getItem("userId");
+            console.log("userId",userId);
+            showToast(`${result.data.message}`, 'success')
+            navigate('/dashboard')
+
+            setLoginFields({ email: "", password: "" });
+
+        }
+        
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          'Something went wrong!';
+        console.log(error);
+        showToast(errorMessage, 'error');
+        
+      }finally {
+        setIsLoginLoading(false); 
+      }
+
+     
     }
   };
+//   submit button
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -150,7 +175,7 @@ const AuthForm = () => {
     if (isRegister) {
       handleRegister(e);
     } else {
-      handleLogin(e); // Call handleLogin for login mode
+      handleLogin(e); 
     }
   };
 
